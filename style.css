@@ -85,6 +85,12 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.slide--visible {
+  opacity: 1;
 }
 
 

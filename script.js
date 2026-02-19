@@ -68,7 +68,30 @@
 
 
 /* ============================================================
-   2. Scroll-cue arrow buttons
+   2. Slide fade-in on entry
+   Uses IntersectionObserver to add .slide--visible when a slide
+   enters the viewport, triggering the 1.5 s CSS opacity transition.
+============================================================ */
+(function () {
+  'use strict';
+
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('slide--visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('.slide').forEach(function (slide) {
+    observer.observe(slide);
+  });
+}());
+
+
+/* ============================================================
+   3. Scroll-cue arrow buttons
    Each button scrolls to the next slide.
 ============================================================ */
 (function () {
