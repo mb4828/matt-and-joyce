@@ -117,12 +117,24 @@ body {
 .botanical--tl {
   top: -15px;
   left: -15px;
+  transform-origin: top left;
+  animation: sway-tl 6s ease-in-out infinite;
 }
 
 .botanical--br {
   bottom: -15px;
   right: -15px;
-  transform: rotate(180deg);
+  animation: sway-br 7.5s ease-in-out infinite;
+}
+
+@keyframes sway-tl {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50%       { transform: rotate(1.5deg); }
+}
+
+@keyframes sway-br {
+  0%, 100% { transform: rotate(178.5deg); }
+  50%       { transform: rotate(181.5deg); }
 }
 
 /* ---- Hero text ---- */
@@ -497,6 +509,10 @@ body {
   .details-main {
     gap: 1.5rem;
   }
+
+  .footer {
+    padding-bottom: 2.4rem;
+  }
 }
 
 /* ============================================================
@@ -540,7 +556,9 @@ body {
 ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .petal,
-  .scroll-cue {
+  .scroll-cue,
+  .botanical--tl,
+  .botanical--br {
     animation: none !important;
   }
 }
