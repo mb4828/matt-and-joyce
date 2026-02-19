@@ -1,0 +1,540 @@
+/* ============================================================
+   RESET & ROOT
+============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* ---- Colors ---- */
+  --cream:        #FAF3EC;
+  --blush:        #E8A0B0;
+  --blush-deep:   #AE5070;
+  --pink-soft:    #F5D2D8;
+  --green-pale:   #A8CA98;
+  --green-mid:    #7AAD6A;
+  --stone:        #3A2E2E;
+  --stone-light:  #7A5F5F;
+
+  /* ---- Typography ---- */
+  --script:  'Parisienne', cursive;
+  --serif:   'Cormorant Garamond', Georgia, serif;
+  --sans:    'Raleway', system-ui, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--sans);
+  font-weight: 300;
+  color: var(--stone);
+  background-color: var(--cream);
+}
+
+
+/* ============================================================
+   ROSE PETALS  (injected by script.js)
+============================================================ */
+#petals {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: 0;
+  border-radius: 50% 0 50% 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+
+/* ============================================================
+   SLIDE CONTAINER  — CSS scroll snap
+============================================================ */
+#slides-container {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#slides-container::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ============================================================
+   INDIVIDUAL SLIDES
+============================================================ */
+.slide {
+  height: 100vh;
+  scroll-snap-align: start;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+
+/* ============================================================
+   SLIDE 1: HERO
+============================================================ */
+.slide--hero {
+  background: linear-gradient(
+    155deg,
+    #FDF2F5 0%,
+    var(--cream) 45%,
+    #F0F7EC 100%
+  );
+}
+
+/* ---- Botanical corner decorations ---- */
+.botanical {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.92;
+}
+
+.botanical--tl {
+  top: -15px;
+  left: -15px;
+}
+
+.botanical--br {
+  bottom: -15px;
+  right: -15px;
+  transform: rotate(180deg);
+}
+
+/* ---- Hero text ---- */
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.hero__eyebrow {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--stone-light);
+  margin-bottom: 1.2rem;
+}
+
+.hero__names {
+  font-family: var(--script);
+  font-size: clamp(4rem, 11vw, 7.5rem);
+  font-weight: 400;
+  color: var(--stone);
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+
+.amp {
+  color: var(--blush-deep);
+}
+
+.hero__event {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 2.7vw, 1.6rem);
+  font-weight: 300;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 2.5rem;
+}
+
+.hero__badge {
+  display: inline-block;
+  padding: 0.55rem 2.4rem;
+  border: 1.5px solid var(--blush);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--blush-deep);
+  background: rgba(232, 160, 176, 0.1);
+}
+
+/* ---- Scroll-cue button (shared by hero + story) ---- */
+.scroll-cue {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--blush);
+  animation: bounce 2.5s ease-in-out infinite;
+  z-index: 2;
+  line-height: 0;
+}
+
+.scroll-cue:focus-visible {
+  outline: 2px solid var(--blush);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+
+/* ============================================================
+   SLIDE 2: STORY / PHOTO
+============================================================ */
+.slide--story {
+  background: var(--pink-soft);
+  padding: 2rem 0;              /* ensures the photo never touches the top/bottom edge */
+}
+
+.story__photo {
+  width: min(640px, 92vw);
+  aspect-ratio: 22 / 13;
+  border-radius: 16px;
+  border: 2px solid var(--blush);
+  overflow: hidden;
+  margin-bottom: 1.4rem;
+  box-shadow: 0 6px 40px rgba(174, 80, 112, 0.14);
+}
+
+.story__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Owl & Eiffel Tower landmarks ---- */
+.story__landmarks {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+
+.story__landmarks span:first-child,
+.story__landmarks span:last-child {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.story__lm-sep {
+  font-family: var(--script);
+  color: var(--blush-deep);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+/* ---- Story copy ---- */
+.story__quote {
+  max-width: 560px;
+  padding: 0 2rem;
+  margin-bottom: 1.6rem;
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--stone);
+  line-height: 1.9;
+  text-align: center;
+}
+
+.story__quote p + p {
+  margin-top: 0.85em;
+}
+
+.story__quote em {
+  font-style: normal;
+  color: var(--blush-deep);
+}
+
+/* ---- Sprig divider ---- */
+.sprig {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.sprig svg {
+  width: min(260px, 88vw);
+  height: auto;
+}
+
+
+/* ============================================================
+   SLIDE 3: DETAILS + CTA + FOOTER
+============================================================ */
+.slide--details {
+  background: var(--cream);
+  justify-content: space-between;
+}
+
+.details-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem 2rem 1rem;
+  width: 100%;
+  text-align: center;
+}
+
+.details__heading {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 5vw, 2.8rem);
+  font-weight: 300;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.details__grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.details__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.3rem 0;
+  width: 100%;
+}
+
+.details__sep {
+  width: 48px;
+  height: 1px;
+  background: var(--blush);
+  opacity: 0.6;
+  align-self: center;
+}
+
+.details__label {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--blush-deep);
+}
+
+.details__value {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 3.2vw, 1.55rem);
+  font-weight: 300;
+  color: var(--stone);
+}
+
+/* ---- Google Maps link ---- */
+.map-link {
+  color: var(--stone);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22rem;
+  transition: color 0.2s ease;
+}
+
+.map-link:hover {
+  color: var(--blush-deep);
+}
+
+.map-link__name {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+  /* inherits font-size from .details__value */
+  font-family: var(--serif);
+  font-weight: 300;
+}
+
+.map-link__addr {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: normal;
+  color: var(--stone-light);
+  letter-spacing: 0.05em;
+}
+
+/* ---- CTA buttons ---- */
+.cta {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1.05rem 2.8rem;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform    0.22s ease,
+    box-shadow   0.22s ease,
+    background   0.22s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(174, 80, 112, 0.28);
+}
+
+/* Both buttons share the same deep rose colour */
+.btn--rsvp,
+.btn--fund {
+  background: var(--blush-deep);
+  color: #fff;
+  border: 1.5px solid var(--blush-deep);
+}
+
+.btn--rsvp:hover,
+.btn--fund:hover {
+  background: #8F3D58;
+  border-color: #8F3D58;
+}
+
+
+/* ============================================================
+   FOOTER  (inside slide 3)
+============================================================ */
+.footer {
+  width: 100%;
+  flex-shrink: 0;
+  padding: 1.6rem 2rem;
+  text-align: center;
+}
+
+.footer__rule {
+  width: 64px;
+  height: 1px;
+  background: var(--blush);
+  margin: 0 auto 1.25rem;
+}
+
+.footer__text {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--stone-light);
+}
+
+
+/* ============================================================
+   RESPONSIVE — MOBILE  (≤ 600 px width)
+============================================================ */
+@media (max-width: 600px) {
+  .story__photo {
+    width: 94vw;
+    /* aspect-ratio: 16/9 still applies */
+  }
+
+  .story__landmarks span:first-child,
+  .story__landmarks span:last-child {
+    font-size: 1.5rem;
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .btn {
+    width: 82vw;
+    max-width: 300px;
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
+    justify-content: center;
+  }
+
+  .details-main {
+    gap: 1.5rem;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — SHORT VIEWPORTS  (≤ 700 px height)
+   Ensures story slide content doesn't overflow on landscape
+   phones or small laptop screens.
+============================================================ */
+@media (max-height: 700px) {
+  .story__photo {
+    width: 88vw;
+    margin-bottom: 0.7rem;
+  }
+
+  .story__landmarks {
+    margin-bottom: 0.7rem;
+  }
+
+  .story__landmarks span:first-child,
+  .story__landmarks span:last-child {
+    font-size: 1.4rem;
+  }
+
+  .story__quote {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+  }
+
+  .story__quote p + p {
+    margin-top: 0.6em;
+  }
+
+  .sprig {
+    margin-bottom: 0;
+  }
+}
+
+
+/* ============================================================
+   ACCESSIBILITY — Reduced motion
+============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .petal,
+  .scroll-cue {
+    animation: none !important;
+  }
+}
