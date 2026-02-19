@@ -68,44 +68,98 @@
 
 
 /* ============================================================
-   2. Slide fade-in on entry
-   Uses IntersectionObserver to add .slide--visible when a slide
-   enters the viewport, triggering the 1.5 s CSS opacity transition.
-============================================================ */
-(function () {
-  'use strict';
-
-  const observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('slide--visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.4 });
-
-  document.querySelectorAll('.slide').forEach(function (slide) {
-    observer.observe(slide);
-  });
-}());
-
-
-/* ============================================================
-   3. Scroll-cue arrow buttons
-   Each button scrolls to the next slide.
+   2 + 3. Full-page JS navigation
+   Slides are position:fixed; JS drives transitions via
+   transform: translateY(). Handles wheel, touch, and buttons.
 ============================================================ */
 (function () {
   'use strict';
 
   const slides = Array.from(document.querySelectorAll('.slide'));
+  if (!slides.length) return;
 
-  document.querySelectorAll('.scroll-cue').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      const parentSlide = btn.closest('.slide');
-      const index       = slides.indexOf(parentSlide);
-      if (index !== -1 && index < slides.length - 1) {
-        slides[index + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  let current = 0;
+  let busy    = false;
+
+  // Show slide 1 after one paint so the opacity:0→1 transition fires
+  slides[0].style.transform = 'translateY(0)';
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      slides[0].classList.add('slide--visible');
     });
   });
+
+  function goTo(index) {
+    if (busy || index === current || index < 0 || index >= slides.length) return;
+    busy = true;
+
+    const from = current;
+    const to   = index;
+
+    if (to > from) {
+      // Forward: standard speed (CSS 0.75s)
+      slides[to].style.transform = 'translateY(0)';
+    } else {
+      // Backward: twice as fast via inline override
+      slides[from].style.transition = 'transform 0.375s cubic-bezier(0.76, 0, 0.24, 1)';
+      slides[from].style.transform  = 'translateY(100%)';
+      // Reset inline transition after it finishes so forward still uses CSS speed
+      setTimeout(function () { slides[from].style.transition = ''; }, 400);
+    }
+
+    // Fade in content on first visit
+    if (!slides[to].classList.contains('slide--visible')) {
+      setTimeout(function () {
+        slides[to].classList.add('slide--visible');
+      }, 150);
+    }
+
+    current = to;
+    setTimeout(function () { busy = false; }, to < from ? 400 : 800);
+  }
+
+  // Steps one slide at a time toward target, chaining transitions
+  function goToChained(target) {
+    var step = target > current ? 1 : -1;
+    goTo(current + step);
+    if (current !== target) {
+      setTimeout(function () { goToChained(target); }, 425);
+    }
+  }
+
+  // Wheel — debounced so one flick = one slide
+  window.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    if (!busy) {
+      if (e.deltaY >  10) goTo(current + 1);
+      if (e.deltaY < -10) goTo(current - 1);
+    }
+  }, { passive: false });
+
+  // Touch swipe
+  var touchStartY = 0;
+  window.addEventListener('touchstart', function (e) {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', function (e) {
+    var dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) {
+      if (dy > 0) goTo(current + 1);
+      else        goTo(current - 1);
+    }
+  }, { passive: true });
+
+  // Down arrows
+  document.querySelectorAll('.scroll-cue').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var i = slides.indexOf(btn.closest('.slide'));
+      if (i !== -1) goTo(i + 1);
+    });
+  });
+
+  // Up arrow on slide 3
+  var topBtn = document.querySelector('.scroll-top');
+  if (topBtn) {
+    topBtn.addEventListener('click', function () { goToChained(0); });
+  }
 }());
