@@ -543,12 +543,6 @@ body {
    RESPONSIVE — MOBILE  (≤ 600 px width)
 ============================================================ */
 @media (max-width: 600px) {
-  .slide--story,
-  .slide--details {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-
   .story__photo {
     width: 94vw;
   }
