@@ -81,11 +81,19 @@
   let current = 0;
   let busy    = false;
 
-  // Show slide 1 after one paint so the opacity:0→1 transition fires
-  slides[0].style.transform = 'translateY(0)';
+  // Show slide 1: suppress the transform transition so it never slides up on load,
+  // then restore it before adding slide--visible so the opacity fade fires cleanly.
+  slides[0].style.transition = 'none';
+  slides[0].style.transform  = 'translateY(0)';
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
+      slides[0].style.transition = '';
       slides[0].classList.add('slide--visible');
+
+      var heroNames = slides[0].querySelector('.hero__names');
+      if (heroNames) {
+        heroNames.classList.add('hero__names--animate');
+      }
     });
   });
 
@@ -126,6 +134,12 @@
       setTimeout(function () { goToChained(target); }, 425);
     }
   }
+
+  // Keyboard — arrow keys
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(current + 1);
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(current - 1);
+  });
 
   // Wheel — debounced so one flick = one slide
   window.addEventListener('wheel', function (e) {
