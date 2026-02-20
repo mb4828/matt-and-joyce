@@ -13,8 +13,6 @@
   --blush:        #E8A0B0;
   --blush-deep:   #AE5070;
   --pink-soft:    #F5D2D8;
-  --green-pale:   #A8CA98;
-  --green-mid:    #7AAD6A;
   --stone:        #3A2E2E;
   --stone-light:  #7A5F5F;
 
@@ -52,7 +50,6 @@ body {
   position: absolute;
   top: 0;
   border-radius: 50% 0 50% 0;
-  pointer-events: none;
   will-change: transform, opacity;
 }
 
@@ -341,11 +338,6 @@ body {
   margin-top: 0.85em;
 }
 
-.story__quote em {
-  font-style: normal;
-  color: var(--blush-deep);
-}
-
 /* ---- Sprig divider ---- */
 .sprig {
   display: flex;
@@ -433,8 +425,6 @@ body {
 .details__link {
   color: inherit;
   text-decoration: none;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--blush);
   transition: color 0.2s ease;
 }
 
@@ -470,7 +460,6 @@ body {
   font-family: var(--sans);
   font-size: 0.82rem;
   font-weight: 400;
-  font-style: normal;
   color: var(--stone-light);
   letter-spacing: 0.05em;
 }

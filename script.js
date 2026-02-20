@@ -1,5 +1,5 @@
 /* ============================================================
-   1. Rose Petal Animation
+   Rose Petal Animation
    Creates individually-animated petals that fall and sway
    across the full viewport.
 ============================================================ */
@@ -12,7 +12,7 @@
   const isMobile   = window.matchMedia('(max-width: 600px)').matches;
   const petalCount = isMobile ? 15 : 26;
 
-  // Blush / rose tones to match the palette
+  // Match the site's blush / rose palette
   const colors = [
     '#E8A0B0',
     '#F5C8D5',
@@ -35,7 +35,7 @@
     const swayA    = Math.round((Math.random() - 0.5) * 90); // ±45 px
     const swayB    = Math.round((Math.random() - 0.5) * 90);
 
-    // One unique @keyframes rule per petal for individualised sway
+    // Each petal needs its own keyframes so sway paths don't repeat
     keyframes.push(`
       @keyframes fall-${i} {
         0%   { transform: translate(0,              -30px)  rotate(${r0}deg);       opacity: 0; }
@@ -60,7 +60,7 @@
     container.appendChild(el);
   }
 
-  // Inject all keyframes in one style element
+  // Batch-inject all keyframes to avoid multiple style reflows
   const style = document.createElement('style');
   style.textContent = keyframes.join('\n');
   document.head.appendChild(style);
@@ -68,9 +68,9 @@
 
 
 /* ============================================================
-   2 + 3. Full-page JS navigation
+   Full-page Slide Navigation
    Slides are position:fixed; JS drives transitions via
-   transform: translateY(). Handles wheel, touch, and buttons.
+   transform: translateY(). Handles wheel, touch, keys, and buttons.
 ============================================================ */
 (function () {
   'use strict';
@@ -90,7 +90,7 @@
       slides[0].style.transition = '';
       slides[0].classList.add('slide--visible');
 
-      var heroNames = slides[0].querySelector('.hero__names');
+      const heroNames = slides[0].querySelector('.hero__names');
       if (heroNames) {
         heroNames.classList.add('hero__names--animate');
       }
@@ -128,7 +128,7 @@
 
   // Steps one slide at a time toward target, chaining transitions
   function goToChained(target) {
-    var step = target > current ? 1 : -1;
+    const step = target > current ? 1 : -1;
     goTo(current + step);
     if (current !== target) {
       setTimeout(function () { goToChained(target); }, 425);
@@ -141,7 +141,7 @@
     if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(current - 1);
   });
 
-  // Wheel — debounced so one flick = one slide
+  // Wheel — `busy` flag debounces so one flick = one slide
   window.addEventListener('wheel', function (e) {
     e.preventDefault();
     if (!busy) {
@@ -151,28 +151,28 @@
   }, { passive: false });
 
   // Touch swipe
-  var touchStartY = 0;
+  let touchStartY = 0;
   window.addEventListener('touchstart', function (e) {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
   window.addEventListener('touchend', function (e) {
-    var dy = touchStartY - e.changedTouches[0].clientY;
+    const dy = touchStartY - e.changedTouches[0].clientY;
     if (Math.abs(dy) > 40) {
       if (dy > 0) goTo(current + 1);
       else        goTo(current - 1);
     }
   }, { passive: true });
 
-  // Down arrows
+  // Down-arrow buttons navigate to the next slide
   document.querySelectorAll('.scroll-cue').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var i = slides.indexOf(btn.closest('.slide'));
+      const i = slides.indexOf(btn.closest('.slide'));
       if (i !== -1) goTo(i + 1);
     });
   });
 
-  // Up arrow on slide 3
-  var topBtn = document.querySelector('.scroll-top');
+  // Up-arrow button chains back to slide 1
+  const topBtn = document.querySelector('.scroll-top');
   if (topBtn) {
     topBtn.addEventListener('click', function () { goToChained(0); });
   }
