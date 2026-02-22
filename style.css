@@ -101,13 +101,7 @@ body {
    SLIDE 1: HERO
 ============================================================ */
 .slide--hero {
-  background: linear-gradient(
-    0deg,
-    var(--pink-soft) 0%,
-    var(--cream) 10%,
-    90%,
-    var(--pink-soft) 100%
-  );
+  background: radial-gradient(ellipse at center, var(--cream) 0%, 75%, var(--pink-soft) 100%);
 }
 
 /* ---- Botanical corner decorations ---- */
